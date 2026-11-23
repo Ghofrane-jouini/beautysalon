@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Client')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('clients')}"></nav>
+    <main class="content">
+        <h1 th:text="${client.id == null} ? 'Nouveau client' : 'Modifier le client'">Client</h1>
+
+        <form class="panneau" th:action="@{${action}}" th:object="${client}" method="post" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="nom">Nom</label>
+                    <input type="text" id="nom" class="form-control" th:field="*{nom}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="prenom">Prénom</label>
+                    <input type="text" id="prenom" class="form-control" th:field="*{prenom}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="telephone">Téléphone</label>
+                    <input type="text" id="telephone" class="form-control" th:field="*{telephone}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-control" th:field="*{email}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-rose">Enregistrer</button>
+                <a th:href="@{/clients}" class="btn btn-contour">Annuler</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

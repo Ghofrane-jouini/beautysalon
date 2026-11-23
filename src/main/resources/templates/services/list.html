@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Services')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('services')}"></nav>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1>Services</h1>
+            <a th:href="@{/services/new}" class="btn btn-rose mb-3">Ajouter un service</a>
+        </div>
+        <div th:replace="~{fragments/layout :: messages}"></div>
+
+        <div class="panneau table-responsive">
+            <table class="table align-middle">
+                <thead><tr><th>Nom</th><th>Description</th><th>Prix</th><th>Durée</th><th class="text-end">Actions</th></tr></thead>
+                <tbody>
+                <tr th:each="s : ${services}">
+                    <td th:text="${s.nom}"></td>
+                    <td th:text="${s.description}"></td>
+                    <td th:text="${#numbers.formatDecimal(s.prix, 1, 2)} + ' DT'"></td>
+                    <td th:text="${s.dureeMinutes} + ' min'"></td>
+                    <td class="text-end">
+                        <a th:href="@{/services/{id}/edit(id=${s.id})}" class="btn btn-sm btn-contour">Modifier</a>
+                        <form th:action="@{/services/{id}/supprimer(id=${s.id})}" method="post" class="d-inline"
+                              onsubmit="return confirm('Supprimer ce service ?');">
+                            <button type="submit" class="btn btn-sm btn-outline-dark">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(services)}"><td colspan="5" class="vide">Aucun service pour le moment. Ajoutez la première prestation.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

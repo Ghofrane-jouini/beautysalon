@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Rendez-vous')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('rendezvous')}"></nav>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h1>Rendez-vous</h1>
+            <a th:href="@{/rendezvous/new}" class="btn btn-rose mb-3">Ajouter un rendez-vous</a>
+        </div>
+        <div th:replace="~{fragments/layout :: messages}"></div>
+
+        <form class="d-flex gap-2 mb-3" th:action="@{/rendezvous}" method="get">
+            <input type="search" name="q" th:value="${q}" class="form-control" placeholder="Rechercher un client par nom ou prénom" aria-label="Rechercher un client">
+            <button type="submit" class="btn btn-contour">Rechercher</button>
+        </form>
+
+        <div class="panneau table-responsive">
+            <table class="table align-middle">
+                <thead><tr><th>Client</th><th>Service</th><th>Date</th><th>Heure</th><th>Statut</th><th class="text-end">Actions</th></tr></thead>
+                <tbody>
+                <tr th:each="r : ${rendezVousList}">
+                    <td th:text="${r.client.nomComplet}"></td>
+                    <td th:text="${r.service.nom}"></td>
+                    <td th:text="${#temporals.format(r.date, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#temporals.format(r.heure, 'HH:mm')}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${r.statut.name() == 'CONFIRME'} ? 'bg-success' : (${r.statut.name() == 'ANNULE'} ? 'bg-secondary' : 'bg-warning text-dark')"
+                              th:text="${r.statut}"></span>
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <a th:href="@{/rendezvous/{id}(id=${r.id})}" class="btn btn-sm btn-contour">Détails</a>
+                        <a th:href="@{/rendezvous/{id}/edit(id=${r.id})}" class="btn btn-sm btn-contour">Modifier</a>
+                        <form th:action="@{/rendezvous/{id}/confirmer(id=${r.id})}" method="post" class="d-inline" th:if="${r.statut.name() == 'EN_ATTENTE'}">
+                            <button type="submit" class="btn btn-sm btn-rose">Confirmer</button>
+                        </form>
+                        <form th:action="@{/rendezvous/{id}/annuler(id=${r.id})}" method="post" class="d-inline" th:if="${r.statut.name() != 'ANNULE'}"
+                              onsubmit="return confirm('Annuler ce rendez-vous ?');">
+                            <button type="submit" class="btn btn-sm btn-outline-dark">Annuler</button>
+                        </form>
+                        <form th:action="@{/rendezvous/{id}/supprimer(id=${r.id})}" method="post" class="d-inline"
+                              onsubmit="return confirm('Supprimer définitivement ce rendez-vous ?');">
+                            <button type="submit" class="btn btn-sm btn-outline-dark">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(rendezVousList)}"><td colspan="6" class="vide">Aucun rendez-vous à afficher.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

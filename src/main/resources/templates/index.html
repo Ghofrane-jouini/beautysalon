@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Tableau de bord')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('accueil')}"></nav>
+    <main class="content">
+        <h1>Tableau de bord</h1>
+        <div th:replace="~{fragments/layout :: messages}"></div>
+
+        <div class="row g-3">
+            <div class="col-12 col-lg-5">
+                <div class="stat stat-principale">
+                    <div class="valeur" th:text="${nbEnAttente}">0</div>
+                    <div class="libelle">rendez-vous en attente de confirmation</div>
+                    <a th:href="@{/rendezvous}" class="btn btn-rose mt-3">Voir les rendez-vous</a>
+                </div>
+            </div>
+            <div class="col-12 col-lg-7">
+                <div class="row g-3 h-100">
+                    <div class="col-12 col-sm-4">
+                        <div class="stat"><div class="valeur" th:text="${nbClients}">0</div><div class="libelle">clients</div></div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="stat"><div class="valeur" th:text="${nbServices}">0</div><div class="libelle">services</div></div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="stat"><div class="valeur" th:text="${nbRendezVous}">0</div><div class="libelle">rendez-vous au total</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

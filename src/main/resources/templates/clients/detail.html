@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Fiche client')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('clients')}"></nav>
+    <main class="content">
+        <h1 th:text="${client.nomComplet}">Client</h1>
+        <div class="panneau">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Nom</dt><dd class="col-sm-9" th:text="${client.nom}"></dd>
+                <dt class="col-sm-3">Prénom</dt><dd class="col-sm-9" th:text="${client.prenom}"></dd>
+                <dt class="col-sm-3">Téléphone</dt><dd class="col-sm-9" th:text="${client.telephone}"></dd>
+                <dt class="col-sm-3">Email</dt><dd class="col-sm-9" th:text="${client.email}"></dd>
+            </dl>
+            <div class="mt-4">
+                <a th:href="@{/clients/{id}/edit(id=${client.id})}" class="btn btn-rose">Modifier</a>
+                <a th:href="@{/rendezvous(q=${client.nom})}" class="btn btn-contour">Ses rendez-vous</a>
+                <a th:href="@{/clients}" class="btn btn-contour">Retour à la liste</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

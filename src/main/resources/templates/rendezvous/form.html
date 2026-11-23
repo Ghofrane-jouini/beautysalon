@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Rendez-vous')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('rendezvous')}"></nav>
+    <main class="content">
+        <h1>Rendez-vous</h1>
+        <div th:replace="~{fragments/layout :: messages}"></div>
+
+        <p class="vide" th:if="${#lists.isEmpty(clients) or #lists.isEmpty(services)}">
+            Il faut au moins un client et un service pour créer un rendez-vous.
+        </p>
+
+        <form class="panneau" th:action="@{${action}}" th:object="${form}" method="post" novalidate>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="clientId">Client</label>
+                    <select id="clientId" class="form-select" th:field="*{clientId}">
+                        <option value="">-- Choisir un client --</option>
+                        <option th:each="c : ${clients}" th:value="${c.id}" th:text="${c.nomComplet}"></option>
+                    </select>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('clientId')}" th:errors="*{clientId}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="serviceId">Service</label>
+                    <select id="serviceId" class="form-select" th:field="*{serviceId}">
+                        <option value="">-- Choisir un service --</option>
+                        <option th:each="s : ${services}" th:value="${s.id}" th:text="${s.nom + ' (' + s.dureeMinutes + ' min)'}"></option>
+                    </select>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('serviceId')}" th:errors="*{serviceId}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="date">Date</label>
+                    <input type="date" id="date" class="form-control" th:field="*{date}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="heure">Heure</label>
+                    <input type="time" id="heure" class="form-control" th:field="*{heure}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('heure')}" th:errors="*{heure}"></div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-rose">Enregistrer</button>
+                <a th:href="@{/rendezvous}" class="btn btn-contour">Annuler</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

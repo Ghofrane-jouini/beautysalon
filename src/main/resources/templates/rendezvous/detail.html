@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head th:replace="~{fragments/layout :: head('Détails du rendez-vous')}"></head>
+<body>
+<div class="app">
+    <nav th:replace="~{fragments/layout :: sidebar('rendezvous')}"></nav>
+    <main class="content">
+        <h1>Détails du rendez-vous</h1>
+        <div class="panneau">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Client</dt>
+                <dd class="col-sm-9"><a th:href="@{/clients/{id}(id=${rdv.client.id})}" th:text="${rdv.client.nomComplet}"></a></dd>
+                <dt class="col-sm-3">Service</dt>
+                <dd class="col-sm-9" th:text="${rdv.service.nom + ' - ' + rdv.service.dureeMinutes + ' min'}"></dd>
+                <dt class="col-sm-3">Date</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(rdv.date, 'dd/MM/yyyy')}"></dd>
+                <dt class="col-sm-3">Heure</dt>
+                <dd class="col-sm-9" th:text="${#temporals.format(rdv.heure, 'HH:mm')}"></dd>
+                <dt class="col-sm-3">Statut</dt>
+                <dd class="col-sm-9" th:text="${rdv.statut}"></dd>
+            </dl>
+            <div class="mt-4">
+                <a th:href="@{/rendezvous/{id}/edit(id=${rdv.id})}" class="btn btn-rose">Modifier</a>
+                <a th:href="@{/rendezvous}" class="btn btn-contour">Retour à la liste</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
