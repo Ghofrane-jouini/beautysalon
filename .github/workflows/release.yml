@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    name: Construire et publier l'image
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ghcr.io/ghofrane-jouini/beautysalon
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Connexion a GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construire l'image (une seule fois)
+        run: >
+          docker build
+          --label org.opencontainers.image.source=https://github.com/Ghofrane-jouini/beautysalon
+          -t "$IMAGE:${GITHUB_REF_NAME}" .
+
+      - name: Publier l'image
+        run: docker push "$IMAGE:${GITHUB_REF_NAME}"
