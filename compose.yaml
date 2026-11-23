@@ -1,0 +1,32 @@
+services:
+  h2-db:
+    build: ./h2
+    image: beautysalon-h2:2.5.252
+    expose:
+      - "9092"
+    volumes:
+      - h2-data:/data
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "9092"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  app:
+    build: .
+    image: beautysalon:${APP_TAG:-1.0.0}
+    depends_on:
+      h2-db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:h2:tcp://h2-db:9092/beautysalon
+      DB_USER: ${DB_USER:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:?Cree le fichier .env (cp .env.example .env)}
+    ports:
+      - "${APP_PORT:-8082}:8080"
+    restart: unless-stopped
+
+volumes:
+  h2-data:
