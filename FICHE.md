@@ -33,10 +33,10 @@ navigateur --> app (Spring Boot :8080) --> h2-db (H2 serveur :9092, non publié)
 2. Retour arrière (une commande) : `APP_TAG=v1.0.0 docker compose -f compose.test.yaml up -d`.
 3. Contrôles : `app` healthy, `/health` UP, titre "Tableau de bord", conteneur sur l'image `sha256:32b86f03...` = digest de v1.0.0 publié au départ (aucune reconstruction).
 4. Données : la base n'est pas touchée, même schéma dans les deux versions (seul du HTML change).
-
 ## 4. Preuves (exécutions GitHub Actions)
 
-- Pipeline réussi : (coller l'URL du run CI vert)
-- Pipeline en échec (test cassé, build-image ignoré) : (coller l'URL du run CI rouge)
-- Release v1.0.0 : (coller l'URL)
-- Deploy test réussi / en échec (tag inexistant) : (coller les 2 URL)
+- Pipeline réussi : https://github.com/Ghofrane-jouini/beautysalon/actions/runs/45304611416
+- Pipeline en échec (test cassé, build-image ignoré) : https://github.com/Ghofrane-jouini/beautysalon/actions/runs/45288923944
+- Release v1.0.0 : https://github.com/Ghofrane-jouini/beautysalon/actions/runs/45301162614
+- Deploy test réussi : https://github.com/Ghofrane-jouini/beautysalon/actions/runs/45305220181
+- Deploy test en échec (tag inexistant v9.9.9) : https://github.com/Ghofrane-jouini/beautysalon/actions/runs/45305992121
