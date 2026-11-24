@@ -1,0 +1,32 @@
+name: beautysalon-test
+
+services:
+  h2-db:
+    build: ./h2
+    image: beautysalon-h2:2.5.252
+    expose:
+      - "9092"
+    volumes:
+      - h2-data-test:/data
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "9092"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  app:
+    image: ghcr.io/ghofrane-jouini/beautysalon:${APP_TAG:?Indique APP_TAG, ex. v1.0.0}
+    pull_policy: always
+    depends_on:
+      h2-db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:h2:tcp://h2-db:9092/beautysalon
+      DB_USER: ${DB_USER:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:?Cree le fichier .env}
+    ports:
+      - "${TEST_PORT:-8083}:8080"
+
+volumes:
+  h2-data-test:
