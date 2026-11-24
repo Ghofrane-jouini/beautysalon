@@ -1,0 +1,47 @@
+name: Deploy test
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de l'image a mettre en service (ex. v1.0.3)"
+        required: true
+        default: "v1.0.3"
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    name: Mise en service et controle de sante
+    runs-on: ubuntu-latest
+    env:
+      APP_TAG: ${{ inputs.tag }}
+      DB_USER: sa
+      DB_PASSWORD: ${{ github.run_id }}-test
+      TEST_PORT: "8083"
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Mise en service de l'image publiee (sans rebuild de l'app)
+        run: docker compose -f compose.test.yaml up -d
+
+      - name: Controle de sante
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fs http://localhost:8083/health | grep -q '"status":"UP"'; then
+              echo "Application saine (tentative $i)"
+              exit 0
+            fi
+            echo "Pas encore sain (tentative $i)"
+            sleep 5
+          done
+          echo "ECHEC : /health ne repond pas UP"
+          docker compose -f compose.test.yaml logs app --tail 50
+          exit 1
+
+      - name: Arret de l'environnement
+        if: always()
+        run: docker compose -f compose.test.yaml down -v
